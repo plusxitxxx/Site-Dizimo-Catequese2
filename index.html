@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ofertas — Sistema Simulado</title>
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">OF</div>
+    <div>
+      <div style="font-weight:800">Ofertas Online</div>
+      <div style="font-size:0.85rem;color:var(--muted)">Protótipo — demonstração local</div>
+    </div>
+  </div>
+
+  <nav id="topnav">
+    <a href="#form">Fazer Oferta</a>
+    <a href="#minhas">Minhas Ofertas</a>
+    <a href="#admin" id="adminLink" style="display:none">Painel Admin</a>
+  </nav>
+
+  <div class="actions">
+    <div id="userBox" style="display:flex;gap:8px;align-items:center">
+      <div id="greeting" class="muted">Olá, visitante</div>
+      <button class="btn small" id="btnLogin">Entrar / Registrar</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+    <!-- lado esquerdo -->
+    <div>
+      <!-- formulário -->
+      <section id="form" class="card">
+        <h1>Ofertar / Dízimo</h1>
+        <p class="muted">Preencha os dados abaixo e escolha o método de pagamento.</p>
+
+        <!-- login -->
+        <div id="authPanel" style="margin:12px 0 18px 0; display:none">
+          <h2 id="authTitle">Entrar</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input id="authUser" placeholder="Usuário (ex: miguel)" style="width:240px">
+            <input id="authPass" type="password" placeholder="Senha" style="width:240px">
+            <button class="btn" id="actionAuth">Entrar</button>
+            <button class="btn secondary" id="toggleRegister">Registrar</button>
+          </div>
+          <div style="margin-top:8px;font-size:0.9rem;color:var(--muted)">
+            Conta demo admin: <span class="kbd">admin</span> / <span class="kbd">admin123</span>
+          </div>
+        </div>
+
+        <!-- oferta -->
+        <div id="donationForm">
+          <label for="donorName">Nome</label>
+          <input id="donorName" type="text" placeholder="Seu nome completo (ou igreja/grupo)">
+
+          <div class="row" style="margin-top:8px">
+            <div>
+              <label for="donorEmail">Email (opcional)</label>
+              <input id="donorEmail" type="email" placeholder="seu@exemplo.com">
+            </div>
+            <div>
+              <label for="donAmount">Valor (R$)</label>
+              <input id="donAmount" type="number" step="0.01" min="1" placeholder="50.00">
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:8px">
+            <div>
+              <label for="bankSelect">Banco</label>
+              <select id="bankSelect">
+                <option value="PIX">PIX (Chave)</option>
+                <option value="Sicoob">Sicoob (conta)</option>
+                <option value="Sicredi">Sicredi (conta)</option>
+                <option value="Nubank">Nubank (conta)</option>
+                <option value="Inter">Inter (conta)</option>
+              </select>
+            </div>
+            <div>
+              <label for="methodSelect">Método</label>
+              <select id="methodSelect">
+                <option value="pix">PIX</option>
+                <option value="transfer">Transferência</option>
+              </select>
+            </div>
+          </div>
+
+          <label style="margin-top:8px">Mensagem (opcional)</label>
+          <textarea id="donMessage" rows="3" placeholder="Motivo, intenção ou palavra"></textarea>
+
+          <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+            <button class="btn" id="btnGenerate">Gerar Instruções / Prosseguir</button>
+            <button class="btn secondary" id="btnClear">Limpar</button>
+            <div id="statusMsg" style="margin-left:auto;color:var(--muted)"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- instruções -->
+      <section id="paymentCard" class="card" style="margin-top:18px; display:none">
+        <h2>Instruções de Pagamento</h2>
+        <div id="paymentArea"></div>
+      </section>
+
+      <!-- ofertas -->
+      <section id="minhas" class="card" style="margin-top:18px">
+        <h2>Minhas Ofertas</h2>
+        <div id="myListArea" class="list">
+          <div class="muted">Nenhuma oferta ainda.</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- lado direito -->
+    <aside>
+      <section class="card">
+        <h2>Resumo Rápido</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+          <div style="flex:1">
+            <div class="muted">Total Ofertas</div>
+            <div id="totalCount" style="font-weight:800;font-size:1.3rem">0</div>
+          </div>
+          <div style="flex:1">
+            <div class="muted">Valor Total (R$)</div>
+            <div id="totalAmount" style="font-weight:800;font-size:1.3rem">0,00</div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="muted">Últimas 5 ofertas</div>
+          <div id="lastFive" style="margin-top:8px"></div>
+        </div>
+      </section>
+
+      <section id="admin" class="card" style="margin-top:18px; display:none">
+        <h2>Painel Admin</h2>
+        <div class="muted" style="margin-bottom:8px">Filtros rápidos</div>
+        <div class="filters">
+          <input id="fName" placeholder="Nome..." class="filter-input">
+          <select id="fBank" class="filter-input">
+            <option value="">Todos bancos</option>
+            <option>Sicoob</option><option>Sicredi</option><option>Nubank</option><option>Inter</option><option>PIX</option>
+          </select>
+          <input id="fDateFrom" type="date" class="filter-input">
+          <input id="fDateTo" type="date" class="filter-input">
+          <select id="fStatus" class="filter-input">
+            <option value="">Todos</option><option value="pending">Pendente</option><option value="confirmed">Confirmado</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="btn small" id="btnFilter">Aplicar</button>
+          <button class="btn secondary small" id="btnClearFilter">Limpar</button>
+          <button class="btn small" id="btnExport">Exportar CSV</button>
+        </div>
+        <div class="list" style="max-height:320px; overflow:auto">
+          <table id="adminTable">
+            <thead><tr><th>Data</th><th>Nome</th><th>Valor</th><th>Banco</th><th>Método</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<footer>© 2025 — Protótipo de Gestão de Ofertas</footer>
+
+<!-- JS externo -->
+<script src="script.js"></script>
+</body>
+</html>
