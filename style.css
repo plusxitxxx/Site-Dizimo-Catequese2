@@ -1,9 +1,9 @@
 :root{
-  --primary:#0b74d1;
-  --accent:#00ad8e;
-  --bg:#f4f7fb;
-  --card:#ffffff;
-  --muted:#6b7280;
+  --primary:#67aae6;
+  --accent:#f3f3f3;
+  --bg:#0c4896;
+  --card:#0059ff;
+  --muted:#292930;
 }
 *{box-sizing:border-box}
 body{
