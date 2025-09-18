@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login — Ofertas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main style="max-width:400px;margin:60px auto">
+    <h1>Entrar / Registrar</h1>
+
+    <label>Usuário</label>
+    <input id="loginUser" type="text" placeholder="Digite seu usuário">
+
+    <label>Senha</label>
+    <input id="loginPass" type="password" placeholder="Digite sua senha">
+
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn" id="btnDoLogin">Entrar</button>
+      <button class="btn secondary" id="btnDoRegister">Registrar</button>
+    </div>
+
+    <div id="loginMsg" class="muted" style="margin-top:12px"></div>
+  </main>
+
+  <script>
+    const storageKey = 'of_users_v1';
+    const currentKey = 'of_current_v1';
+
+    function loadUsers(){ return JSON.parse(localStorage.getItem(storageKey)||'[]') }
+    function saveUsers(u){ localStorage.setItem(storageKey, JSON.stringify(u||[])) }
+    function setCurrent(u){ localStorage.setItem(currentKey, JSON.stringify(u||null)) }
+
+    document.getElementById('btnDoLogin').onclick = ()=>{
+      const u = document.getElementById('loginUser').value.trim();
+      const p = btoa(document.getElementById('loginPass').value);
+      const users = loadUsers();
+      const found = users.find(x=>x.user===u && x.pass===p);
+      if(!found){ return showMsg('Usuário ou senha incorretos.'); }
+      setCurrent({user:found.user,isAdmin:found.isAdmin||false});
+      window.location = 'index.html';
+    };
+
+    document.getElementById('btnDoRegister').onclick = ()=>{
+      const u = document.getElementById('loginUser').value.trim();
+      const p = btoa(document.getElementById('loginPass').value);
+      if(!u||!p){ return showMsg('Preencha os campos.'); }
+      let users = loadUsers();
+      if(users.find(x=>x.user===u)){ return showMsg('Usuário já existe.'); }
+      users.push({user:u,pass:p,isAdmin:false});
+      saveUsers(users);
+      showMsg('Registrado com sucesso! Faça login.');
+    };
+
+    function showMsg(t){
+      document.getElementById('loginMsg').innerText = t;
+    }
+  </script>
+</body>
+</html>
