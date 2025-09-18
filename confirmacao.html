@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confirmação — Ofertas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main style="max-width:600px;margin:60px auto">
+    <h1>Oferta Registrada</h1>
+    <div id="confirmArea" class="card" style="margin-top:18px"></div>
+    <button class="btn" style="margin-top:20px" onclick="window.location='index.html'">Voltar</button>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const all = JSON.parse(localStorage.getItem('of_donations_v1')||'[]');
+    const d = all.find(x=>x.id===id);
+
+    if(!d){
+      document.getElementById('confirmArea').innerText = 'Oferta não encontrada.';
+    } else {
+      document.getElementById('confirmArea').innerHTML = `
+        <div><strong>Nome:</strong> ${d.name}</div>
+        <div><strong>Valor:</strong> R$ ${d.amount.toFixed(2)}</div>
+        <div><strong>Banco:</strong> ${d.bank}</div>
+        <div><strong>Método:</strong> ${d.method.toUpperCase()}</div>
+        <div><strong>Mensagem:</strong> ${d.message||'-'}</div>
+        <div><strong>Data:</strong> ${new Date(d.date).toLocaleString('pt-BR')}</div>
+      `;
+    }
+  </script>
+</body>
+</html>
